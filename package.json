@@ -1,0 +1,35 @@
+{
+  "name": "example_contract",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node --experimental-vm-modules $(yarn bin jest) --testTimeout=15000 --runInBand"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aztec/aztec-node": "^0.1.0-alpha63",
+    "@aztec/aztec-rpc": "^0.1.0-alpha63",
+    "@aztec/aztec-sandbox": "^0.1.0-alpha63",
+    "@aztec/aztec.js": "^0.1.0-alpha63",
+    "@aztec/circuits.js": "^0.1.0-alpha63",
+    "@aztec/foundation": "^0.1.0-alpha63",
+    "@aztec/types": "^0.1.0-alpha63",
+    "jest": "^29.6.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.4",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    },
+    "testRegex": "./.*\\.test\\.ts$",
+    "rootDir": "."
+  }
+}

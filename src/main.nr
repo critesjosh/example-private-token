@@ -3,6 +3,7 @@ use dep::aztec::{
     state_vars::{
         map::Map,
         public_state::PublicState,
+        singleton::Singleton,
     },
     types::type_serialisation::field_serialisation::{
         FieldSerialisationMethods, FIELD_SERIALISED_LEN,
@@ -10,12 +11,16 @@ use dep::aztec::{
 };
 use dep::easy_private_state::easy_private_state::EasyPrivateUint;
 use dep::std::option::Option;
+mod types;
+use crate::types::{OwnerNote, OwnerNoteMethods, OWNER_NOTE_LEN};
 
 struct Storage {
     balances: Map<EasyPrivateUint>,
     total_transferred: PublicState<Field, FIELD_SERIALISED_LEN>,
-    // owner: Field
+    owner: Singleton<types::OwnerNote, OWNER_NOTE_LEN>,
 }
+
+
 
 impl Storage {
     fn init(
@@ -37,7 +42,7 @@ impl Storage {
                 2,
                 FieldSerialisationMethods,
             ),
-            // owner: Field
+            owner: Singleton::new(context,3, OwnerNoteMethods),
         }
     }
 }

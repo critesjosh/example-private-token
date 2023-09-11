@@ -29,40 +29,40 @@ contract Example {
     use crate::types::{OwnerNote, OwnerNoteMethods, OWNER_NOTE_LEN};
     use dep::std::option::Option;
 
-struct Storage {
-    balances: Map<EasyPrivateUint>,
-    total_transferred: PublicState<Field, FIELD_SERIALISED_LEN>,
-    owner: Singleton<OwnerNote, OWNER_NOTE_LEN>,
-}
+    struct Storage {
+        balances: Map<EasyPrivateUint>,
+        total_transferred: PublicState<Field, FIELD_SERIALISED_LEN>,
+        owner: Singleton<OwnerNote, OWNER_NOTE_LEN>,
+    }
 
-impl Storage {
-    fn init(
-        private_context: Option<&mut PrivateContext>,
-        public_context: Option<&mut PublicContext>,
-    ) -> pub Self {
-        Storage {
-            balances: Map::new(
-                private_context,
-                public_context,
-                1,
-                |private_context, public_context, slot| {
-                    EasyPrivateUint::new(private_context, public_context, slot)
-                },
-            ),
-            total_transferred: PublicState::new(
-                private_context,
-                public_context,
-                2,
-                FieldSerialisationMethods,
-            ),
-            owner: Singleton::new(
-                private_context, 
-                public_context,
-                3, 
-                OwnerNoteMethods),
+    impl Storage {
+        fn init(
+            private_context: Option<&mut PrivateContext>,
+            public_context: Option<&mut PublicContext>,
+        ) -> pub Self {
+            Storage {
+                balances: Map::new(
+                    private_context,
+                    public_context,
+                    1,
+                    |private_context, public_context, slot| {
+                        EasyPrivateUint::new(private_context, public_context, slot)
+                    },
+                ),
+                total_transferred: PublicState::new(
+                    private_context,
+                    public_context,
+                    2,
+                    FieldSerialisationMethods,
+                ),
+                owner: Singleton::new(
+                    private_context, 
+                    public_context,
+                    3, 
+                    OwnerNoteMethods),
+            }
         }
     }
-}
 
     #[aztec(private)]
     fn constructor(

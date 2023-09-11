@@ -1,32 +1,45 @@
-use dep::aztec::{
-    context::{PrivateContext, PublicContext},
-    state_vars::{
-        map::Map,
-        public_state::PublicState,
-        singleton::Singleton,
-    },
-    types::type_serialisation::field_serialisation::{
-        FieldSerialisationMethods, FIELD_SERIALISED_LEN,
-    },
-};
-use dep::easy_private_state::easy_private_state::EasyPrivateUint;
-use dep::std::option::Option;
 mod types;
-use crate::types::{OwnerNote, OwnerNoteMethods, OWNER_NOTE_LEN};
+
+contract Example {
+    use dep::value_note::{
+            balance_utils,
+            value_note::{
+                ValueNoteMethods,
+                VALUE_NOTE_LEN,
+            },
+    };
+    use dep::easy_private_state::easy_private_state::EasyPrivateUint;
+    use dep::aztec::{
+        abi,
+        abi::PrivateContextInputs,
+        context::{PrivateContext, PublicContext},
+        note::{
+            note_header::NoteHeader,
+            utils as note_utils,
+        },
+        state_vars::{
+            map::Map,
+            public_state::PublicState,
+            singleton::Singleton,
+        },
+        types::type_serialisation::field_serialisation::{
+            FieldSerialisationMethods, FIELD_SERIALISED_LEN,
+        },
+    };
+    use crate::types::{OwnerNote, OwnerNoteMethods, OWNER_NOTE_LEN};
+    use dep::std::option::Option;
 
 struct Storage {
     balances: Map<EasyPrivateUint>,
     total_transferred: PublicState<Field, FIELD_SERIALISED_LEN>,
-    owner: Singleton<types::OwnerNote, OWNER_NOTE_LEN>,
+    owner: Singleton<OwnerNote, OWNER_NOTE_LEN>,
 }
-
-
 
 impl Storage {
     fn init(
         private_context: Option<&mut PrivateContext>,
         public_context: Option<&mut PublicContext>,
-    ) -> Self {
+    ) -> pub Self {
         Storage {
             balances: Map::new(
                 private_context,
@@ -42,34 +55,14 @@ impl Storage {
                 2,
                 FieldSerialisationMethods,
             ),
-            owner: Singleton::new(context,3, OwnerNoteMethods),
+            owner: Singleton::new(
+                private_context, 
+                public_context,
+                3, 
+                OwnerNoteMethods),
         }
     }
 }
-
-contract Example {
-    use crate::Storage;
-
-    use dep::aztec::abi::Hasher;
-    use dep::value_note::{
-            balance_utils,
-            value_note::{
-                ValueNoteMethods,
-                VALUE_NOTE_LEN,
-            },
-    };
-    use dep::aztec::{
-        abi,
-        abi::PrivateContextInputs,
-        context::PrivateContext,
-        note::{
-            note_header::NoteHeader,
-            utils as note_utils,
-        },
-        oracle::compute_selector::compute_selector,
-    };
-
-    use dep::std::option::Option;
 
     #[aztec(private)]
     fn constructor(
@@ -101,6 +94,7 @@ contract Example {
     #[aztec(private)]
     fn mint( amount: u120, recipient: Field, ) {
         let storage = Storage::init(Option::some(&mut context), Option::none());
+        assert(context.msg_sender() == storage.owner.get_note().owner);
         storage.balances.at(recipient).add(amount, recipient);
     }
 

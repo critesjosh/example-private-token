@@ -28,7 +28,7 @@ describe('Testing Example Aztec contract', () => {
 
     it('Deploys a contract', async () => {
         const address = await account.getAddress();
-        const exampleContract = await ExampleContract.deploy(rpc, 100n, address).send().deployed();
+        const exampleContract = await ExampleContract.deploy(rpc, 100n, address, 123).send().deployed();
         expect(exampleContract).toBeDefined();
     })
 

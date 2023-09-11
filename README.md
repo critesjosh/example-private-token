@@ -25,7 +25,7 @@ aztec-cli compile ./path/to/my_aztec_contract_project
 ### With Typescript interfaces
 
 ```bash
-aztec-cli compile --typescript . .
+aztec-cli compile --typescript ./ts .
 ```
 
 ### With Noir interfaces
@@ -54,4 +54,10 @@ Start the Sandbox with
 
 ```bash
 npx @aztec/aztec-sandbox
+```
+
+Run tests with
+
+```bash
+yarn test
 ```

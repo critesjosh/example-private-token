@@ -6,7 +6,7 @@ import { AztecAddress, CompleteAddress, ContractBase, ContractFunctionInteractio
 import { Fr, Point } from '@aztec/foundation/fields';
 import { AztecRPC, PublicKey } from '@aztec/types';
 import { ContractAbi } from '@aztec/foundation/abi';
-import ExampleContractAbiJson from 'target/Example.json' assert { type: 'json' };
+import ExampleContractAbiJson from '../target/Example.json' assert { type: 'json' };
 export const ExampleContractAbi = ExampleContractAbiJson as unknown as ContractAbi;
 
 /**
@@ -48,14 +48,14 @@ export class ExampleContract extends ContractBase {
   /**
    * Creates a tx to deploy a new instance of this contract.
    */
-  public static deploy(rpc: AztecRPC, initial_supply: (bigint | number), owner: FieldLike) {
+  public static deploy(rpc: AztecRPC, initial_supply: (bigint | number), owner: FieldLike, owner_note_secret: FieldLike) {
     return new DeployMethod<ExampleContract>(Point.ZERO, rpc, ExampleContractAbi, Array.from(arguments).slice(1));
   }
 
   /**
    * Creates a tx to deploy a new instance of this contract using the specified public key to derive the address.
    */
-  public static deployWithPublicKey(rpc: AztecRPC, publicKey: PublicKey, initial_supply: (bigint | number), owner: FieldLike) {
+  public static deployWithPublicKey(rpc: AztecRPC, publicKey: PublicKey, initial_supply: (bigint | number), owner: FieldLike, owner_note_secret: FieldLike) {
     return new DeployMethod<ExampleContract>(publicKey, rpc, ExampleContractAbi, Array.from(arguments).slice(2));
   }
   
@@ -89,5 +89,8 @@ export class ExampleContract extends ContractBase {
 
     /** transfer(amount: integer, recipient: field) */
     transfer: ((amount: (bigint | number), recipient: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
+
+    /** transfer_ownership(secret: field, recipient: field) */
+    transfer_ownership: ((secret: FieldLike, recipient: FieldLike) => ContractFunctionInteraction) & Pick<ContractMethod, 'selector'>;
   };
 }

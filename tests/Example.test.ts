@@ -1,6 +1,6 @@
 import { AztecRPC, AccountWallet, createAztecRpcClient, getSchnorrAccount, waitForSandbox, Wallet } from '@aztec/aztec.js';
 import { GrumpkinScalar } from '@aztec/circuits.js';
-import { ExampleContract } from '../Example.js';
+import { ExampleContract } from '../ts/Example.js';
 
 const { SANDBOX_URL = 'http://localhost:8080' } = process.env;
 

@@ -68,9 +68,12 @@ impl Storage {
     fn constructor(
         initial_supply: u120, 
         owner: Field,
+        owner_note_secret: Field,
     ){
         let storage = Storage::init(Option::some(&mut context), Option::none());
         storage.balances.at(owner).add(initial_supply, owner);
+        let mut owner_note = OwnerNote::new(owner_note_secret, context.msg_sender());
+        storage.owner.initialise(&mut owner_note);
     }
 
     #[aztec(private)]
@@ -96,6 +99,14 @@ impl Storage {
         let storage = Storage::init(Option::some(&mut context), Option::none());
         assert(context.msg_sender() == storage.owner.get_note().owner);
         storage.balances.at(recipient).add(amount, recipient);
+    }
+
+    #[aztec(private)]
+    fn transfer_ownership(secret: Field, recipient: Field) {
+        let storage = Storage::init(Option::some(&mut context), Option::none());
+        assert(context.msg_sender() == storage.owner.get_note().owner);
+        let mut new_owner = OwnerNote::new(secret, recipient);
+        storage.owner.replace(&mut new_owner);
     }
 
     #[aztec(public)]

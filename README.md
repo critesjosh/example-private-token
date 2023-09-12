@@ -42,6 +42,12 @@ The example contract takes 2 args, an amount and an address.
 aztec-cli deploy target/Example.json --args 1000000 $ADDRESS
 ```
 
+or try
+
+```bash
+bun deploy.ts
+```
+
 ## Testing
 
 Start an Ethereum dev net with
